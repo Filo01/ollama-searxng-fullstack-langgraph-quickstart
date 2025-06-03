@@ -1,5 +1,6 @@
 import os
 import requests
+import re
 from agent.tools_and_schemas import SearchQueryList, Reflection
 from dotenv import load_dotenv
 from langchain_core.messages import AIMessage
@@ -52,7 +53,6 @@ def generate_query(state: OverallState, config: RunnableConfig) -> QueryGenerati
         messages=[{"role": "user", "content": formatted_prompt}],
     )
     import json
-    import re
     content = response["message"]["content"]
     print("Ollama response:", content)  # Debug print
     try:
@@ -198,11 +198,26 @@ def finalize_answer(state: OverallState, config: RunnableConfig):
     text = response["message"]["content"]
     unique_sources = state["sources_gathered"]
 
-    # Replace [Source N] with markdown links in the answer
-    for source in unique_sources:
-        label = source["label"]
-        url = source["short_url"]
-        text = text.replace(f"[{label}]", f"[{label}]({url})")
+    # Build a mapping from label to url
+    label_to_url = {source["label"]: source["short_url"] for source in unique_sources}
+
+    # Regex to find [Source 1], [Source 1, Source 2, ...], etc.
+    def replace_sources(match):
+        sources = match.group(1)
+        # Split by comma and strip whitespace
+        labels = [s.strip() for s in sources.split(",")]
+        # Replace each with a markdown link if available
+        links = []
+        for label in labels:
+            url = label_to_url.get(label)
+            if url:
+                links.append(f"[{label}]({url})")
+            else:
+                links.append(label)
+        return ", ".join(links)
+
+    # Replace all occurrences of [Source ...] or [Source 1, Source 2, ...]
+    text = re.sub(r"\[([^\]]+)\]", replace_sources, text)
 
     return {
         "messages": [AIMessage(content=text)],
