@@ -83,7 +83,7 @@ answer_instructions = """Generate a high-quality answer to the user's question b
 
 Instructions:
 - The current date is {current_date}.
-- You are the finaly step of a multi-step research process, don't mention that you are the final step. 
+- You are the final step of a multi-step research process, don't mention that you are the final step. 
 - You have access to all the information gathered from the previous steps.
 - You have access to the user's question.
 - Generate a high-quality answer to the user's question based on the provided summaries and the user's question.
