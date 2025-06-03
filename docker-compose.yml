@@ -34,8 +34,22 @@ services:
         condition: service_healthy
       langgraph-postgres:
         condition: service_healthy
+      searxng:
+        condition: service_started
     environment:
-      GEMINI_API_KEY: ${GEMINI_API_KEY}
-      LANGSMITH_API_KEY: ${LANGSMITH_API_KEY}
       REDIS_URI: redis://langgraph-redis:6379
       POSTGRES_URI: postgres://postgres:postgres@langgraph-postgres:5432/postgres?sslmode=disable
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3}
+      SEARXNG_URL: ${SEARXNG_URL:-http://searxng:8080/search}
+
+  searxng:
+    image: searxng/searxng:latest
+    ports:
+      - "8080:8080"
+    environment:
+      BASE_URL: http://searxng:8080/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

@@ -11,13 +11,13 @@ requires-python = ">=3.11,<4.0"
 dependencies = [
     "langgraph>=0.2.6",
     "langchain>=0.3.19",
-    "langchain-google-genai",
     "python-dotenv>=1.0.1",
     "langgraph-sdk>=0.1.57",
     "langgraph-cli",
     "langgraph-api",
     "fastapi",
-    "google-genai",
+    "ollama>=0.1.6",
+    "requests>=2.31.0",
 ]
 
 

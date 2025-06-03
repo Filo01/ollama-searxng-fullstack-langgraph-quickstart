@@ -9,23 +9,30 @@ class Configuration(BaseModel):
     """The configuration for the agent."""
 
     query_generator_model: str = Field(
-        default="gemini-2.0-flash",
+        default="gemma3:4b",
         metadata={
-            "description": "The name of the language model to use for the agent's query generation."
+            "description": "The name of the language model to use for the agent's query generation. (Ollama model)"
         },
     )
 
     reflection_model: str = Field(
-        default="gemini-2.5-flash-preview-04-17",
+        default="gemma3:14b",
         metadata={
-            "description": "The name of the language model to use for the agent's reflection."
+            "description": "The name of the language model to use for the agent's reflection. (Ollama model)"
         },
     )
 
     answer_model: str = Field(
-        default="gemini-2.5-pro-preview-05-06",
+        default="gemma3:27b",
         metadata={
-            "description": "The name of the language model to use for the agent's answer."
+            "description": "The name of the language model to use for the agent's answer. (Ollama model)"
+        },
+    )
+
+    searxng_url: str = Field(
+        default="http://localhost:8080/search",
+        metadata={
+            "description": "The URL of the SearxNG instance to use for web search."
         },
     )
 

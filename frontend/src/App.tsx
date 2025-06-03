@@ -23,7 +23,7 @@ export default function App() {
   }>({
     apiUrl: import.meta.env.DEV
       ? "http://localhost:2024"
-      : "http://localhost:8123",
+      : "http://langgraph-api.ollama.svc.cluster.local:8000",
     assistantId: "agent",
     messagesKey: "messages",
     onFinish: (event: any) => {
